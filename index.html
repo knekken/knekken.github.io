@@ -166,6 +166,17 @@ section { padding: 110px 0 40px; scroll-margin-top: 40px; }
 }
 .stage h3 { font-size: 36px; color: var(--gold); }
 
+/* Kit bag */
+.items { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
+.item {
+  display: grid; grid-template-rows: 150px auto 1fr; padding: 20px 22px 22px;
+  background: radial-gradient(90% 70% at 50% 25%, color-mix(in srgb, var(--item) 22%, transparent), transparent 70%), var(--panel);
+  border: 1px solid var(--line); border-top: 3px solid var(--item); border-radius: 6px;
+}
+.item img { width: 100%; height: 150px; object-fit: contain; filter: drop-shadow(0 10px 14px rgba(0, 0, 0, 0.55)); }
+.item h3 { font-size: 30px; margin: 12px 0 8px; color: var(--item); }
+.item p { margin: 0; font-size: 15.5px; line-height: 1.45; color: var(--muted); }
+
 /* How to play */
 .controls { width: 100%; border-collapse: separate; border-spacing: 0 8px; font-size: 16px; }
 .controls th { text-align: left; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 0 10px; }
@@ -247,6 +258,7 @@ footer .brand { font-size: 22px; }
   <ul>
     <li><a href="#fighters">Fighters</a></li>
     <li><a href="#banor">Banor</a></li>
+    <li><a href="#kitbag">Kit bag</a></li>
     <li><a href="#spela">Spela</a></li>
     <li><a href="#online">Online</a></li>
     <li><a href="#ladda-ner">Ladda ner</a></li>
@@ -479,10 +491,62 @@ footer .brand { font-size: 22px; }
     </div>
   </section>
 
-  <section id="spela">
+  <section id="kitbag">
     <div class="wrap">
       <div class="section-head">
         <span class="num" aria-hidden="true">03</span>
+        <h2>KIT BAG</h2>
+        <p>Mätaren under namnet fylls när du landar träffar. När den blinkar trycker du 1+2 och drar en av 8 prylar ur väskan. Du står still medan du plockar, så gör det på avstånd.</p>
+      </div>
+      <div class="items">
+      <article class="item" style="--item:#ffc74c">
+        <img src="img/items/knuckles.webp" alt="Knogjärn" loading="lazy">
+        <h3>Knogjärn</h3>
+        <p>Slagen (1 och 2) gör 40 % mer skada och ger längre hitstun. Räcker 6 träffar eller 10 sekunder. Syns som mässing på knogarna.</p>
+      </article>
+      <article class="item" style="--item:#ebf2ff">
+        <img src="img/items/ladd.webp" alt="Ladd" loading="lazy">
+        <h3>Ladd</h3>
+        <p>I 8 sekunder: 30 % snabbare, tar en fjärdedel mindre skada, och lätta slag (under 10) får dig inte att vika. Sedan en krasch i 3 sekunder: långsam och tar 25 % mer skada.</p>
+      </article>
+      <article class="item" style="--item:#8cd959">
+        <img src="img/items/olflaska.webp" alt="Ölflaska" loading="lazy">
+        <h3>Ölflaska</h3>
+        <p>Nästa slag som tar krossar flaskan i huvudet på motståndaren: 2,5 gånger skadan och slår ner. Räcker ett slag eller 10 sekunder.</p>
+      </article>
+      <article class="item" style="--item:#73bfff">
+        <img src="img/items/snus.webp" alt="Snus" loading="lazy">
+        <h3>Snus</h3>
+        <p>En prilla ger 30 i liv tillbaka. Du står still medan du lägger in den.</p>
+      </article>
+      <article class="item" style="--item:#ff4c33">
+        <img src="img/items/bengal.webp" alt="Bengal" loading="lazy">
+        <h3>Bengal</h3>
+        <p>I 7 sekunder bränner den motståndaren (2 i skada var femtedels sekund) när ni står nära, även genom block. Den tar aldrig någon till K.O. på egen hand.</p>
+      </article>
+      <article class="item" style="--item:#bfc7d1">
+        <img src="img/items/cykelkedja.webp" alt="Cykelkedja" loading="lazy">
+        <h3>Cykelkedja</h3>
+        <p>I 9 sekunder når slagen en halv meter längre och gör 25 % mer skada. Kedjan sitter lindad om näven.</p>
+      </article>
+      <article class="item" style="--item:#fff266">
+        <img src="img/items/megafon.webp" alt="Megafon" loading="lazy">
+        <h3>Megafon</h3>
+        <p>Du ropar &quot;VAKNA!&quot; så att motståndaren står yr en stund, om hen är inom drygt 3 meter. Ingen skada.</p>
+      </article>
+      <article class="item" style="--item:#ff8c33">
+        <img src="img/items/smallare.webp" alt="Smällare" loading="lazy">
+        <h3>Smällare</h3>
+        <p>Du kastar den och den smäller vid motståndarens fötter: 14 i skada och slår ner, även genom block, om hen är inom 2,8 meter.</p>
+      </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="spela">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="num" aria-hidden="true">04</span>
         <h2>SÅ SPELAR DU</h2>
         <p>Fyra knappar: vänster och höger slag, vänster och höger spark. Två spelare på samma tangentbord, eller med var sin handkontroll.</p>
       </div>
@@ -555,7 +619,7 @@ footer .brand { font-size: 22px; }
   <section id="online">
     <div class="wrap">
       <div class="section-head">
-        <span class="num" aria-hidden="true">04</span>
+        <span class="num" aria-hidden="true">05</span>
         <h2>ONLINE</h2>
         <p>Direkt mellan er två med rollback, som i de riktiga fightingspelen. Ingen server att sätta upp och inget konto, bara en kod på fyra bokstäver.</p>
       </div>
@@ -573,7 +637,7 @@ footer .brand { font-size: 22px; }
   <section id="ladda-ner">
     <div class="wrap">
       <div class="section-head">
-        <span class="num" aria-hidden="true">05</span>
+        <span class="num" aria-hidden="true">06</span>
         <h2>LADDA NER</h2>
         <p>Packa upp och starta, ingen installation. Mac-versionen är signerad och godkänd av Apple. Windows-versionen är inte signerad, så där varnar datorn första gången.</p>
       </div>
