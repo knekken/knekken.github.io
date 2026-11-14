@@ -203,7 +203,11 @@ kbd {
 .download { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
 .platform { padding: 30px; background: linear-gradient(160deg, #24111b, var(--panel)); border: 1px solid var(--line); border-radius: 6px; }
 .platform h3 { font-size: 40px; margin-bottom: 10px; }
-.platform p { color: var(--muted); margin: 0 0 16px; }
+.platform .button { margin-bottom: 10px; }
+.platform .size { margin: 0 0 18px; color: var(--muted); font-size: 15px; }
+.platform ol { margin: 0; padding-left: 20px; color: var(--muted); font-size: 16px; }
+.platform li { margin-bottom: 8px; }
+.platform b { color: var(--text); }
 code { font: 600 15px/1.4 ui-monospace, "SF Mono", Menlo, monospace; color: var(--gold); background: rgba(255, 209, 46, 0.08); padding: 2px 7px; border-radius: 4px; }
 .note { margin-top: 22px; color: var(--muted); font-size: 16px; }
 
@@ -259,7 +263,7 @@ footer .brand { font-size: 22px; }
     <p class="lead">17 fighters, 5 banor och en knockout i slowmotion. Två spelare vid samma dator, mot datorn eller online med en rumskod.</p>
     <div class="actions">
       <a class="button play" href="video/trailer.mp4" data-trailer>Se trailern</a>
-      <a class="button ghost" href="#fighters">Se rostern</a>
+      <a class="button ghost" href="#ladda-ner">Ladda ner</a>
     </div>
   </div>
 </header>
@@ -543,21 +547,31 @@ footer .brand { font-size: 22px; }
       <div class="section-head">
         <span class="num" aria-hidden="true">05</span>
         <h2>LADDA NER</h2>
-        <p>Spelet körs med Godot och startas med ett dubbelklick. Första gången förbereds modeller och ljud, det tar en liten stund.</p>
+        <p>Packa upp och starta, ingen installation. Spelet är inte signerat av Apple eller Microsoft, så första gången varnar datorn. Så här kommer du förbi:</p>
       </div>
       <div class="download">
         <div class="platform">
           <h3>MAC</h3>
-          <p>Dubbelklicka på <code>spela.command</code>. Saknas Godot installeras den med Homebrew.</p>
-          <p>Mot datorn direkt: <code>./spela.command --cpu</code></p>
+          <a class="button" href="https://github.com/knekken/knekken.github.io/releases/latest/download/Knekken-mac.zip">Ladda ner för Mac</a>
+          <p class="size">Intel och Apple Silicon · ca 500 MB</p>
+          <ol>
+            <li>Packa upp zip-filen och dra <b>Knekken</b> till Program.</li>
+            <li>Dubbelklicka. När macOS säger att appen inte kan kontrolleras, välj <b>Klar</b>.</li>
+            <li>Öppna <b>Systeminställningar › Integritet och säkerhet</b>, scrolla ner och klicka <b>Öppna ändå</b>.</li>
+          </ol>
         </div>
         <div class="platform">
           <h3>WINDOWS</h3>
-          <p>Dubbelklicka på <code>spela.bat</code>. Godot 4.7 hämtas och kontrolleras automatiskt, utan installation.</p>
-          <p>Mot datorn direkt: <code>spela.bat --cpu</code></p>
+          <a class="button" href="https://github.com/knekken/knekken.github.io/releases/latest/download/Knekken-windows.zip">Ladda ner för Windows</a>
+          <p class="size">Windows 10 och 11, 64-bit · ca 460 MB</p>
+          <ol>
+            <li>Högerklicka på zip-filen och välj <b>Extrahera alla</b>.</li>
+            <li>Starta <b>Knekken.exe</b> i mappen Knekken.</li>
+            <li>Visar Windows "Windows skyddade datorn", klicka <b>Mer info › Kör ändå</b>.</li>
+          </ol>
         </div>
       </div>
-      <p class="note">Spelet delas inom gänget. Färdiga nedladdningar för Mac och Windows kommer här.</p>
+      <p class="note">Tidigare versioner finns bland <a href="https://github.com/knekken/knekken.github.io/releases">releaserna på GitHub</a>.</p>
     </div>
   </section>
 </main>
