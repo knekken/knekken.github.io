@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knekken</title>
+<meta name="description" content="Knekken är ett 3D-fightingspel med gänget: 17 fighters, 5 banor, två spelare vid samma dator eller online med en rumskod.">
+<meta property="og:title" content="Knekken">
+<meta property="og:description" content="3D-fightingspel med gänget. 17 fighters, 5 banor, online med rumskod.">
+<meta property="og:image" content="img/share.jpg">
+<meta name="theme-color" content="#0b0407">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b0407'/%3E%3Cpath d='M18 12h10v16l12-16h12L38 30l15 22H40L28 34v18H18z' fill='%23ffd12e'/%3E%3C/svg%3E">
+<style>
+@font-face { font-family: Anton; src: url(fonts/Anton-Regular.ttf) format("truetype"); font-display: swap; }
+@font-face { font-family: "Source Sans 3"; src: url(fonts/SourceSans3.ttf) format("truetype"); font-weight: 200 900; font-display: swap; }
+
+:root {
+  --bg: #0b0407;
+  --bg-2: #150910;
+  --panel: #1c0d15;
+  --line: rgba(255, 255, 255, 0.09);
+  --text: #f4eee7;
+  --muted: rgba(244, 238, 231, 0.68);
+  --gold: #ffd12e;
+  --gold-deep: #c99a12;
+  --red: #e0384a;
+  --blue: #4c9bff;
+  --ink: #141416;
+  --display: Anton, Impact, "Arial Narrow", sans-serif;
+  --body: "Source Sans 3", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 400 18px/1.55 var(--body);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+img { max-width: 100%; display: block; }
+a { color: inherit; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; letter-spacing: 0.01em; line-height: 0.95; margin: 0; }
+.wrap { width: min(1200px, 100% - 32px); margin-inline: auto; }
+
+/* Navigation */
+.nav {
+  position: fixed; inset: 0 0 auto; z-index: 10;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px max(16px, (100% - 1200px) / 2);
+  background: rgba(11, 4, 7, 0.78);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { font-family: var(--display); font-size: 28px; color: var(--gold); text-decoration: none; letter-spacing: 0.02em; }
+.nav ul { display: flex; gap: 26px; list-style: none; margin: 0; padding: 0; }
+.nav ul a { text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.nav ul a:hover { color: var(--gold); }
+
+/* Hero */
+.hero {
+  position: relative; min-height: 100svh;
+  display: grid; align-items: end;
+  padding: 120px 0 72px;
+  background:
+    linear-gradient(180deg, rgba(11, 4, 7, 0.25) 0%, rgba(11, 4, 7, 0.1) 40%, rgba(11, 4, 7, 0.92) 88%, var(--bg) 100%),
+    linear-gradient(90deg, rgba(11, 4, 7, 0.85) 0%, rgba(11, 4, 7, 0) 60%),
+    url(img/hero.webp) 62% 40% / cover no-repeat;
+}
+.kicker { font-weight: 700; letter-spacing: 0.24em; text-transform: uppercase; font-size: 14px; color: var(--gold); margin: 0 0 14px; }
+.hero h1 {
+  font-size: clamp(88px, 17vw, 220px);
+  color: var(--text);
+  text-shadow: 0 6px 40px rgba(0, 0, 0, 0.6);
+}
+.hero h1 span { color: var(--gold); }
+.bar {
+  width: min(520px, 80%); height: 14px; margin: 18px 0 24px;
+  background: linear-gradient(90deg, var(--gold) 0 72%, var(--red) 72% 86%, rgba(255, 255, 255, 0.14) 86%);
+  transform: skewX(-24deg);
+  box-shadow: 0 0 30px rgba(255, 209, 46, 0.35);
+}
+.lead { max-width: 560px; font-size: clamp(19px, 2.2vw, 23px); color: var(--text); margin: 0 0 30px; }
+.actions { display: flex; flex-wrap: wrap; gap: 14px; }
+.button {
+  display: inline-block; padding: 14px 30px;
+  font-family: var(--display); font-size: 22px; letter-spacing: 0.04em; text-decoration: none;
+  color: var(--ink); background: var(--gold);
+  clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+  transition: transform 0.15s, background 0.15s;
+}
+.button:hover { transform: translateY(-2px); background: #ffe06b; }
+.button.ghost { background: rgba(255, 255, 255, 0.1); color: var(--text); }
+.button.ghost:hover { background: rgba(255, 255, 255, 0.2); }
+
+/* Fact strip */
+.facts { border-block: 1px solid var(--line); background: var(--bg-2); }
+.facts ul { display: grid; grid-template-columns: repeat(4, 1fr); list-style: none; margin: 0 auto; padding: 0; }
+.facts li { padding: 26px 18px; text-align: center; border-left: 1px solid var(--line); }
+.facts li:first-child { border-left: 0; }
+.facts b { display: block; font-family: var(--display); font-weight: 400; font-size: 40px; color: var(--gold); line-height: 1; }
+.facts span { font-size: 15px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; }
+
+/* Sections */
+section { padding: 110px 0 40px; scroll-margin-top: 40px; }
+.section-head { display: grid; grid-template-columns: auto 1fr; gap: 6px 28px; align-items: end; margin-bottom: 44px; }
+.section-head .num { grid-row: span 2; font-family: var(--display); font-size: 120px; line-height: 0.8; color: transparent; -webkit-text-stroke: 2px rgba(255, 209, 46, 0.5); }
+.section-head h2 { font-size: clamp(48px, 7vw, 84px); }
+.section-head p { margin: 0; color: var(--muted); max-width: 640px; }
+
+/* Roster */
+.roster { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
+.fighter {
+  position: relative; display: grid; grid-template-columns: 112px 1fr; gap: 6px;
+  min-height: 300px; padding: 18px 18px 18px 6px; overflow: hidden;
+  background:
+    radial-gradient(120% 80% at 18% 100%, rgba(255, 209, 46, 0.16), transparent 60%),
+    linear-gradient(160deg, #24111b, var(--panel) 60%);
+  border: 1px solid var(--line); border-radius: 6px;
+  transition: transform 0.2s, border-color 0.2s;
+}
+.fighter:hover { transform: translateY(-4px); border-color: rgba(255, 209, 46, 0.5); }
+.portrait { display: flex; align-items: flex-end; justify-content: center; }
+.portrait img { height: 270px; width: auto; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.6)); transition: transform 0.25s; }
+.fighter:hover .portrait img { transform: scale(1.04); }
+.info { display: flex; flex-direction: column; min-width: 0; }
+.origin {
+  align-self: flex-start; margin-bottom: 8px; padding: 2px 8px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--ink); background: var(--red); border-radius: 3px;
+}
+.nick { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: var(--gold); text-transform: uppercase; }
+.fighter h3 { font-size: 34px; margin: 4px 0 8px; }
+.tagline { margin: 0 0 14px; font-size: 15.5px; line-height: 1.4; color: var(--muted); }
+.stats { display: grid; gap: 5px; margin-top: auto; }
+.stat { display: grid; grid-template-columns: 74px 1fr; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.stat i {
+  height: 8px; transform: skewX(-24deg);
+  background: linear-gradient(90deg, var(--gold) calc(var(--v) * 20%), rgba(255, 255, 255, 0.1) 0);
+}
+
+/* Stages */
+.stages { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.stage { position: relative; margin: 0; overflow: hidden; border-radius: 6px; border: 1px solid var(--line); background: var(--panel); }
+.stage.wide { grid-column: span 2; }
+.stage img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform 0.6s; }
+.stage.wide img { aspect-ratio: 21 / 9; }
+.stage:hover img { transform: scale(1.03); }
+.stage figcaption {
+  position: absolute; inset: auto 0 0; padding: 70px 24px 22px;
+  background: linear-gradient(transparent, rgba(11, 4, 7, 0.94) 55%);
+}
+.stage h3 { font-size: 36px; color: var(--gold); margin-bottom: 6px; }
+.stage p { margin: 0; font-size: 15.5px; line-height: 1.45; color: var(--text); max-width: 760px; }
+
+/* How to play */
+.controls { width: 100%; border-collapse: separate; border-spacing: 0 8px; font-size: 16px; }
+.controls th { text-align: left; font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 700; padding: 0 10px; }
+.controls td { padding: 10px; background: var(--panel); }
+.controls td:first-child { border-radius: 6px 0 0 6px; font-family: var(--display); font-size: 22px; color: var(--gold); white-space: nowrap; }
+.controls td:last-child { border-radius: 0 6px 6px 0; }
+kbd {
+  display: inline-block; min-width: 30px; padding: 3px 8px; margin: 1px;
+  font: 700 15px/1.3 var(--body); text-align: center;
+  color: var(--text); background: #2a1620; border: 1px solid rgba(255, 255, 255, 0.16);
+  border-bottom-width: 3px; border-radius: 5px;
+}
+.table-scroll { overflow-x: auto; margin-bottom: 40px; }
+.tips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.tip { padding: 26px; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; border-top: 3px solid var(--gold); }
+.tip h3 { font-size: 30px; margin-bottom: 12px; }
+.tip p, .tip li { color: var(--muted); font-size: 16px; }
+.tip ul { margin: 0; padding-left: 18px; }
+.tip li { margin-bottom: 6px; }
+.tip b { color: var(--text); }
+
+/* Online */
+.online { display: grid; grid-template-columns: 1.25fr 1fr; gap: 40px; align-items: center; }
+.online img { border-radius: 6px; border: 1px solid var(--line); }
+.steps { list-style: none; counter-reset: step; margin: 0; padding: 0; display: grid; gap: 18px; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 54px 1fr; gap: 16px; align-items: start; color: var(--muted); }
+.steps li::before {
+  content: counter(step); display: grid; place-items: center; height: 54px;
+  font-family: var(--display); font-size: 30px; color: var(--ink); background: var(--gold); border-radius: 6px;
+}
+.steps b { display: block; color: var(--text); font-size: 20px; }
+
+/* Download */
+.download { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.platform { padding: 30px; background: linear-gradient(160deg, #24111b, var(--panel)); border: 1px solid var(--line); border-radius: 6px; }
+.platform h3 { font-size: 40px; margin-bottom: 10px; }
+.platform p { color: var(--muted); margin: 0 0 16px; }
+code { font: 600 15px/1.4 ui-monospace, "SF Mono", Menlo, monospace; color: var(--gold); background: rgba(255, 209, 46, 0.08); padding: 2px 7px; border-radius: 4px; }
+.note { margin-top: 22px; color: var(--muted); font-size: 16px; }
+
+footer { margin-top: 110px; padding: 40px 0 60px; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+footer .brand { font-size: 22px; }
+
+@media (max-width: 900px) {
+  .facts ul { grid-template-columns: repeat(2, 1fr); }
+  .facts li:nth-child(3) { border-left: 0; }
+  .facts li:nth-child(n + 3) { border-top: 1px solid var(--line); }
+  .stages, .tips, .download, .online { grid-template-columns: 1fr; }
+  .stage.wide { grid-column: auto; }
+  .stage.wide img { aspect-ratio: 16 / 9; }
+  .stage figcaption { position: static; padding: 18px 20px 22px; background: none; }
+}
+@media (max-width: 640px) {
+  body { font-size: 17px; }
+  .nav ul { display: none; }
+  .hero { padding-bottom: 48px; background-position: center, center, 76% 40%; }
+  section { padding-top: 80px; }
+  .section-head { grid-template-columns: 1fr; }
+  .section-head .num { display: none; }
+  .roster { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  * { transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Huvudmeny">
+  <a class="brand" href="#">KNEKKEN</a>
+  <ul>
+    <li><a href="#fighters">Fighters</a></li>
+    <li><a href="#banor">Banor</a></li>
+    <li><a href="#spela">Spela</a></li>
+    <li><a href="#online">Online</a></li>
+    <li><a href="#ladda-ner">Ladda ner</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">3D-fightingspel med gänget</p>
+    <h1>KNEK<span>KEN</span></h1>
+    <div class="bar" aria-hidden="true"></div>
+    <p class="lead">17 fighters, 5 banor och en knockout i slowmotion. Två spelare vid samma dator, mot datorn eller online med en rumskod.</p>
+    <div class="actions">
+      <a class="button" href="#ladda-ner">Ladda ner</a>
+      <a class="button ghost" href="#fighters">Se rostern</a>
+    </div>
+  </div>
+</header>
+
+<div class="facts">
+  <ul class="wrap">
+    <li><b>17</b><span>Fighters</span></li>
+    <li><b>5</b><span>Banor</span></li>
+    <li><b>60</b><span>Bildrutor i sekunden</span></li>
+    <li><b>1 v 1</b><span>Lokalt eller online</span></li>
+  </ul>
+</div>
+
+<main>
+  <section id="fighters">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="num" aria-hidden="true">01</span>
+        <h2>ROSTERN</h2>
+        <p>Gänget ur gruppchatten och sju figurer från The Last Hooligan. Var och en har egna signaturmoves och ett profilkort med styrka, fart, tålighet och teknik.</p>
+      </div>
+      <div class="roster">
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/marcin.webp" alt="Marcin i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          
+          <p class="nick">NAVET</p>
+          <h3>Marcin</h3>
+          <p class="tagline">Navet i chatten. Alla svarar honom.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:4"></i></div><div class="stat"><span>Speed</span><i style="--v:2"></i></div><div class="stat"><span>Toughness</span><i style="--v:5"></i></div><div class="stat"><span>Technique</span><i style="--v:3"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/draken.webp" alt="Draken i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          
+          <p class="nick">DEBATTÖREN</p>
+          <h3>Draken</h3>
+          <p class="tagline">Ställer frågorna. Vinner diskussionerna.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:3"></i></div><div class="stat"><span>Speed</span><i style="--v:3"></i></div><div class="stat"><span>Toughness</span><i style="--v:3"></i></div><div class="stat"><span>Technique</span><i style="--v:5"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/stevoo.webp" alt="Stevoo i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          
+          <p class="nick">FINSMAKAREN</p>
+          <h3>Stevoo</h3>
+          <p class="tagline">Svarar på tre minuter. Slår lika fort.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:2"></i></div><div class="stat"><span>Speed</span><i style="--v:5"></i></div><div class="stat"><span>Toughness</span><i style="--v:4"></i></div><div class="stat"><span>Technique</span><i style="--v:4"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/miki.webp" alt="Miki i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          
+          <p class="nick">ALL IN</p>
+          <h3>Miki</h3>
+          <p class="tagline">Reels, poker och 672 gubbar som flinar.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:4"></i></div><div class="stat"><span>Speed</span><i style="--v:4"></i></div><div class="stat"><span>Toughness</span><i style="--v:4"></i></div><div class="stat"><span>Technique</span><i style="--v:3"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/jack.webp" alt="Jack i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          
+          <p class="nick">EN ÖL TILL</p>
+          <h3>Jack</h3>
+          <p class="tagline">En öl är ingen öl.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:3"></i></div><div class="stat"><span>Speed</span><i style="--v:3"></i></div><div class="stat"><span>Toughness</span><i style="--v:3"></i></div><div class="stat"><span>Technique</span><i style="--v:3"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/robin.webp" alt="Robin i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          
+          <p class="nick">TRÄNAREN</p>
+          <h3>Robin</h3>
+          <p class="tagline">Boxningstränaren. Få ord, snabba händer.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:3"></i></div><div class="stat"><span>Speed</span><i style="--v:4"></i></div><div class="stat"><span>Toughness</span><i style="--v:3"></i></div><div class="stat"><span>Technique</span><i style="--v:5"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/sonny.webp" alt="Sonny i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          
+          <p class="nick">MEDIABYRÅN</p>
+          <h3>Sonny</h3>
+          <p class="tagline">444 tecken per meddelande. Mediabyrån.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:3"></i></div><div class="stat"><span>Speed</span><i style="--v:2"></i></div><div class="stat"><span>Toughness</span><i style="--v:4"></i></div><div class="stat"><span>Technique</span><i style="--v:3"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/fredde.webp" alt="Fredde i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          
+          <p class="nick">LÅSSMEDEN</p>
+          <h3>Fredde</h3>
+          <p class="tagline">Ground and pound. Kan låsa upp allt.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:4"></i></div><div class="stat"><span>Speed</span><i style="--v:3"></i></div><div class="stat"><span>Toughness</span><i style="--v:4"></i></div><div class="stat"><span>Technique</span><i style="--v:3"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/andy.webp" alt="Andy i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          
+          <p class="nick">FÅORDIGE</p>
+          <h3>Andy</h3>
+          <p class="tagline">Skriver lite. Varje ord sitter.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:4"></i></div><div class="stat"><span>Speed</span><i style="--v:3"></i></div><div class="stat"><span>Toughness</span><i style="--v:3"></i></div><div class="stat"><span>Technique</span><i style="--v:4"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/wigge.webp" alt="Wigge i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          
+          <p class="nick">BILJETTFIXAREN</p>
+          <h3>Wigge</h3>
+          <p class="tagline">Biljettfixaren från Sollentuna.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:4"></i></div><div class="stat"><span>Speed</span><i style="--v:2"></i></div><div class="stat"><span>Toughness</span><i style="--v:4"></i></div><div class="stat"><span>Technique</span><i style="--v:3"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/big_al.webp" alt="Big Al i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          <span class="origin">The Last Hooligan</span>
+          <p class="nick">THE STEPLADDER</p>
+          <h3>Big Al</h3>
+          <p class="tagline">Six foot six of elbows. The shirt comes off.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:3"></i></div><div class="stat"><span>Speed</span><i style="--v:4"></i></div><div class="stat"><span>Toughness</span><i style="--v:5"></i></div><div class="stat"><span>Technique</span><i style="--v:4"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/vic.webp" alt="Fat Vic i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          <span class="origin">The Last Hooligan</span>
+          <p class="nick">THE PYTHON</p>
+          <h3>Fat Vic</h3>
+          <p class="tagline">Strypgrepp specialist. Once he has your throat, it is over.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:4"></i></div><div class="stat"><span>Speed</span><i style="--v:2"></i></div><div class="stat"><span>Toughness</span><i style="--v:5"></i></div><div class="stat"><span>Technique</span><i style="--v:3"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/kenny.webp" alt="Kenny Showtime i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          <span class="origin">The Last Hooligan</span>
+          <p class="nick">ULTRAVIOLENCE</p>
+          <h3>Kenny Showtime</h3>
+          <p class="tagline">Masked up, pumped up, no off switch.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:5"></i></div><div class="stat"><span>Speed</span><i style="--v:3"></i></div><div class="stat"><span>Toughness</span><i style="--v:4"></i></div><div class="stat"><span>Technique</span><i style="--v:2"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/mo.webp" alt="Big Mo i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          <span class="origin">The Last Hooligan</span>
+          <p class="nick">THE FRIDGE</p>
+          <h3>Big Mo</h3>
+          <p class="tagline">Slow. Huge. Shrugs off jabs.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:5"></i></div><div class="stat"><span>Speed</span><i style="--v:1"></i></div><div class="stat"><span>Toughness</span><i style="--v:5"></i></div><div class="stat"><span>Technique</span><i style="--v:2"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/stig.webp" alt="Little Stig i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          <span class="origin">The Last Hooligan</span>
+          <p class="nick">THE TERRACE RAT</p>
+          <h3>Little Stig</h3>
+          <p class="tagline">Fast hands, faster feet. A bit fragile.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:2"></i></div><div class="stat"><span>Speed</span><i style="--v:5"></i></div><div class="stat"><span>Toughness</span><i style="--v:2"></i></div><div class="stat"><span>Technique</span><i style="--v:5"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/old_boy.webp" alt="The Old Boy i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          <span class="origin">The Last Hooligan</span>
+          <p class="nick">GRANDAD</p>
+          <h3>The Old Boy</h3>
+          <p class="tagline">Seen it all since the seventies. Headbutts first.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:4"></i></div><div class="stat"><span>Speed</span><i style="--v:2"></i></div><div class="stat"><span>Toughness</span><i style="--v:4"></i></div><div class="stat"><span>Technique</span><i style="--v:3"></i></div></div>
+        </div>
+      </article>
+      <article class="fighter">
+        <div class="portrait"><img src="img/fighters/dez.webp" alt="The Last Hooligan i stridsställning" loading="lazy" width="274" height="590"></div>
+        <div class="info">
+          <span class="origin">The Last Hooligan</span>
+          <p class="nick">DEZ</p>
+          <h3>The Last Hooligan</h3>
+          <p class="tagline">All-rounder. Dress him up in the wardrobe.</p>
+          <div class="stats"><div class="stat"><span>Power</span><i style="--v:3"></i></div><div class="stat"><span>Speed</span><i style="--v:3"></i></div><div class="stat"><span>Toughness</span><i style="--v:3"></i></div><div class="stat"><span>Technique</span><i style="--v:4"></i></div></div>
+        </div>
+      </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="banor">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="num" aria-hidden="true">02</span>
+        <h2>BANORNA</h2>
+        <p>Från perrongen i Västra skogen till en takterrass i Dubai. Banorna lever under ronden: tåget dundrar förbi, bengalerna tänds och puben jublar.</p>
+      </div>
+      <div class="stages">
+      <figure class="stage wide">
+        <img src="img/stages/sista_taget.webp" alt="Sista tåget – Västra skogen" loading="lazy">
+        <figcaption><h3>Sista tåget – Västra skogen</h3><p>Perrongen med tåget som rusar förbi var 26:e sekund, rulltrappor och skyltar i SL:s stil: stationsnamn med T och linjerna 10 och 11, och avgångsskylten i orange punktmatris (10 Hjulsta, 11 Akalla, &quot;Nu&quot;). 12 extra skada vid spårkanten när tåget passerar.</p></figcaption>
+      </figure>
+      <figure class="stage">
+        <img src="img/stages/aik_dubai.webp" alt="AIK Dubai – Dubai Marina" loading="lazy">
+        <figcaption><h3>AIK Dubai – Dubai Marina</h3><p>Takterrass med träskdäck och infinitypool under en fotograferad skymningshimmel som blir neonnatt, sandstorm mitt i ronden, poolstänk vid kanten, AIK-flagga och LED-show på Burj Khalifa. Glastornen i Marinan är raka, trappade eller runda, i olika glasfärger. Barpallar och ett kafébord är fotoskannade.</p></figcaption>
+      </figure>
+      <figure class="stage">
+        <img src="img/stages/rasunda.webp" alt="Derbyt – Råsunda" loading="lazy">
+        <figcaption><h3>Derbyt – Råsunda</h3><p>Planen framför en fullsatt hemmaläktare under strålkastarna, med runt tiotusen fans som hejar och klappar (gjorda av fighternas egna modeller), där främsta raden vid barriären står i 3D. Bengalerna tänds en i taget under ronden, hela läktaren går upp vid hårda träffar och strålkastarna blinkar vid K.O.</p></figcaption>
+      </figure>
+      <figure class="stage">
+        <img src="img/stages/the_anchor.webp" alt="The Anchor" loading="lazy">
+        <figcaption><h3>The Anchor</h3><p>Puben från The Last Hooligan: lackat plankgolv som speglar lamporna, bar i valnöt med flaskor och pintglas, flocktapet och poolbordet. Stamgäster ur gänget (de som inte slåss) och en bartender jublar vid hårda träffar. Lamporna svänger vid hårda träffar.</p></figcaption>
+      </figure>
+      <figure class="stage">
+        <img src="img/stages/arena.webp" alt="Träningsarenan" loading="lazy">
+        <figcaption><h3>Träningsarenan</h3><p>Enkel bana att träna på, mellan två eldpelare i skymningen.</p></figcaption>
+      </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="spela">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="num" aria-hidden="true">03</span>
+        <h2>SÅ SPELAR DU</h2>
+        <p>Fyra knappar: vänster och höger slag, vänster och höger spark. Två spelare på samma tangentbord, eller med var sin handkontroll.</p>
+      </div>
+      <div class="table-scroll">
+        <table class="controls">
+          <thead><tr><th></th><th>Gå</th><th>Upp / ner</th><th>1 · Vänster slag</th><th>2 · Höger slag</th><th>3 · Vänster spark</th><th>4 · Höger spark</th></tr></thead>
+          <tbody>
+            <tr><td>P1</td><td><kbd>A</kbd> <kbd>D</kbd></td><td><kbd>W</kbd> <kbd>S</kbd></td><td><kbd>F</kbd></td><td><kbd>G</kbd></td><td><kbd>V</kbd></td><td><kbd>B</kbd></td></tr>
+            <tr><td>P2</td><td><kbd>←</kbd> <kbd>→</kbd></td><td><kbd>↑</kbd> <kbd>↓</kbd></td><td><kbd>O</kbd></td><td><kbd>P</kbd></td><td><kbd>L</kbd></td><td><kbd>Ö</kbd></td></tr>
+            <tr><td>Kontroll</td><td>Styrkors / spak</td><td>Styrkors / spak</td><td><kbd>□</kbd> <kbd>X</kbd></td><td><kbd>△</kbd> <kbd>Y</kbd></td><td><kbd>✕</kbd> <kbd>A</kbd></td><td><kbd>○</kbd> <kbd>B</kbd></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tips">
+        <div class="tip">
+          <h3>FÖRSVAR</h3>
+          <ul>
+            <li>Håll <b>bakåt</b> för att blocka höga och mellanhöga attacker.</li>
+            <li>Håll <b>ner</b> för att huka under höga attacker och kast.</li>
+            <li><b>Ner+bakåt</b> blockar låga attacker.</li>
+            <li><b>Upp</b> sidesteppar in i bilden, dubbeltryck <b>ner</b> sidesteppar ut.</li>
+          </ul>
+        </div>
+        <div class="tip">
+          <h3>ATTACKER</h3>
+          <ul>
+            <li><b>1, 2</b> jab och cross, <b>framåt+2</b> uppercut som lyfter.</li>
+            <li><b>Ner+1</b> huk-jab, <b>ner+4</b> lågspark.</li>
+            <li><b>1+3</b> och <b>2+4</b> är kast. Bryt dem med <b>1</b> eller <b>2</b>.</li>
+            <li>Träffa mitt i motståndarens attack för <b>COUNTER!</b></li>
+          </ul>
+        </div>
+        <div class="tip">
+          <h3>I LUFTEN</h3>
+          <ul>
+            <li><b>Upp+framåt</b> eller <b>upp+bakåt</b> hoppar.</li>
+            <li>I luften går du över låga attacker och kast, men kan inte blocka.</li>
+            <li>En attack per hopp: <b>1</b> hoppslag, <b>3</b> cykelspark, <b>4</b> hoppspark.</li>
+            <li>Jonglera den du lyft innan han landar.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="online">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="num" aria-hidden="true">04</span>
+        <h2>ONLINE</h2>
+        <p>Direkt mellan er två med rollback, som i de riktiga fightingspelen. Ingen server att sätta upp och inget konto, bara en kod på fyra bokstäver.</p>
+      </div>
+      <div class="online">
+        <img src="img/stages/online.webp" alt="Onlinelobbyn med korten Skapa rum och Gå med framför gänget på scenen" loading="lazy">
+        <ol class="steps">
+          <li><div><b>Skapa rum</b>Tryck <kbd>V</kbd> på valskärmen (<kbd>✕</kbd> på handkontrollen) och välj Skapa rum.</div></li>
+          <li><div><b>Läs upp koden</b>Fyra bokstäver i stora guldbrickor. Kompisen väljer Gå med och skriver in dem.</div></li>
+          <li><div><b>Fight</b>När ni är ihopkopplade väljer ni fighter och bana tillsammans, som vid samma skärm.</div></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section id="ladda-ner">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="num" aria-hidden="true">05</span>
+        <h2>LADDA NER</h2>
+        <p>Spelet körs med Godot och startas med ett dubbelklick. Första gången förbereds modeller och ljud, det tar en liten stund.</p>
+      </div>
+      <div class="download">
+        <div class="platform">
+          <h3>MAC</h3>
+          <p>Dubbelklicka på <code>spela.command</code>. Saknas Godot installeras den med Homebrew.</p>
+          <p>Mot datorn direkt: <code>./spela.command --cpu</code></p>
+        </div>
+        <div class="platform">
+          <h3>WINDOWS</h3>
+          <p>Dubbelklicka på <code>spela.bat</code>. Godot 4.7 hämtas och kontrolleras automatiskt, utan installation.</p>
+          <p>Mot datorn direkt: <code>spela.bat --cpu</code></p>
+        </div>
+      </div>
+      <p class="note">Spelet delas inom gänget. Färdiga nedladdningar för Mac och Windows kommer här.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#">KNEKKEN</a>
+    <span>Byggt i Godot 4.7 · Figurer och banor från The Last Hooligan · Typsnitt Anton och Source Sans 3 (OFL)</span>
+  </div>
+</footer>
+
+</body>
+</html>
