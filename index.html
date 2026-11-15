@@ -211,7 +211,7 @@ kbd {
 .steps b { display: block; color: var(--text); font-size: 20px; }
 
 /* Download */
-.download { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.download { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .platform { padding: 30px; background: linear-gradient(160deg, #24111b, var(--panel)); border: 1px solid var(--line); border-radius: 6px; }
 .platform h3 { font-size: 40px; margin-bottom: 10px; }
 .platform .button { margin-bottom: 10px; }
@@ -576,6 +576,7 @@ footer .brand { font-size: 22px; }
             <li><b>1, 2</b> jab och cross, <b>framåt+2</b> uppercut som lyfter.</li>
             <li><b>Ner+1</b> huk-jab, <b>ner+4</b> lågspark.</li>
             <li><b>1+3</b> och <b>2+4</b> är kast. Bryt dem med <b>1</b> eller <b>2</b>.</li>
+            <li><b>1,2,4</b> och <b>3,4</b> är kedjor alla har, och varje fighter har egna. Pausmenyn visar dem.</li>
             <li>Träffa mitt i motståndarens attack för <b>COUNTER!</b></li>
           </ul>
         </div>
@@ -596,19 +597,21 @@ footer .brand { font-size: 22px; }
             <li>Mätaren under namnet fylls när du landar träffar.</li>
             <li>När den blinkar <b>1+2</b>: tryck <b>1+2</b> och dra en pryl ur väskan. Du står still medan du plockar, så gör det på avstånd.</li>
             <li><b>Knogjärn</b>: slagen gör 40 % mer skada. <b>Ladd</b>: snabbare och tåligare i 8 sekunder, sedan en krasch.</li>
+            <li>Med en femtedel av livet kvar blir du <b>tänd</b>: <b>3+4</b> släpper loss din fighters egen super, en gång per rond.</li>
           </ul>
         </div>
         <div class="tip">
           <h3>MENYER</h3>
           <ul>
-            <li>Med handkontroll: <b>✕</b> väljer, <b>○</b> backar, <b>□</b> spela mot datorn, <b>△</b> online, upp/ner byter dräkt.</li>
-            <li>Med tangentbord: <b>F</b> väljer, <b>G</b> ångrar, <b>B</b> datorn, <b>V</b> online.</li>
+            <li>Med handkontroll: <b>✕</b> väljer, <b>○</b> backar, <b>□</b> spela mot datorn, <b>△</b> online, upp/ner byter dräkt, <b>RB</b> lägen.</li>
+            <li>Med tangentbord: <b>F</b> väljer, <b>G</b> ångrar, <b>B</b> datorn, <b>V</b> online, <b>Tab</b> lägen.</li>
+            <li>Lägen: arkad mot åtta ur gänget, turnering för 3–16, träning med frame data och repriser.</li>
           </ul>
         </div>
         <div class="tip">
           <h3>PAUS</h3>
           <ul>
-            <li><b>Esc</b> eller <b>Start</b> pausar. Där finns båda fighternas kommandon, ljud och bild, omstart och byt fighter.</li>
+            <li><b>Esc</b> eller <b>Start</b> pausar. Där finns båda fighternas kommandon, ljud och bild (även låg grafik för svagare datorer), omstart och byt fighter.</li>
             <li><b>M</b> slår av och på ljudet var som helst.</li>
           </ul>
         </div>
@@ -639,7 +642,7 @@ footer .brand { font-size: 22px; }
       <div class="section-head">
         <span class="num" aria-hidden="true">06</span>
         <h2>LADDA NER</h2>
-        <p>Packa upp och starta, ingen installation. Mac-versionen är signerad och godkänd av Apple. Windows-versionen är inte signerad, så där varnar datorn första gången.</p>
+        <p>Packa upp och starta, ingen installation. Mac-versionen är signerad och godkänd av Apple. Windows-versionen är inte signerad, så där varnar datorn första gången. Linux-versionen kräver ett grafikkort med Vulkan.</p>
       </div>
       <div class="download">
         <div class="platform">
@@ -659,6 +662,13 @@ footer .brand { font-size: 22px; }
             <li>Högerklicka på zip-filen och välj <b>Extrahera alla</b>.</li>
             <li>Starta <b>Knekken.exe</b> i mappen Knekken.</li>
             <li>Visar Windows "Windows skyddade datorn", klicka <b>Mer info › Kör ändå</b>.</li>
+          </ol>
+        </div>
+        <div class="platform">
+          <h3>LINUX</h3>
+          <p class="size">x86_64, Vulkan · kommer med nästa version</p>
+          <ol>
+            <li>Svag grafik (som Intels inbyggda)? Spelet väljer låg grafik själv, och du byter i pausmenyn under <b>Ljud och bild</b>.</li>
           </ol>
         </div>
       </div>
