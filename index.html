@@ -144,7 +144,7 @@ section { padding: 110px 0 40px; scroll-margin-top: 40px; }
 .fighter:hover .portrait img { transform: scale(1.04); }
 .info { display: flex; flex-direction: column; min-width: 0; }
 .nick { margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.16em; color: var(--gold); text-transform: uppercase; }
-.fighter h3 { font-size: 34px; margin: 4px 0 8px; }
+.fighter h3 { font-size: 34px; margin: 4px 0 8px; hyphens: manual; overflow-wrap: break-word; }
 .tagline { margin: 0 0 14px; font-size: 15.5px; line-height: 1.4; color: var(--muted); }
 .stats { display: grid; gap: 5px; margin-top: auto; }
 .stat { display: grid; grid-template-columns: 74px 1fr; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
@@ -445,7 +445,7 @@ footer .brand { font-size: 22px; }
         <div class="portrait"><img src="img/fighters/svinningemannen.webp" alt="Svinningemannen i stridsställning" loading="lazy" width="274" height="590"></div>
         <div class="info">
           <p class="nick">BONDEN</p>
-          <h3>Svinningemannen</h3>
+          <h3>Svinninge&shy;mannen</h3>
           <p class="tagline">Långsam och tung. Svingar som en rallare.</p>
           <div class="stats"><div class="stat"><span>Power</span><i style="--v:5"></i></div><div class="stat"><span>Speed</span><i style="--v:1"></i></div><div class="stat"><span>Toughness</span><i style="--v:4"></i></div><div class="stat"><span>Technique</span><i style="--v:2"></i></div></div>
         </div>
